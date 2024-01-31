@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Assignment 4: Libraries</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Assignment 4: Libraries</h1>
+
+    <div>
+    <p>Schematic</p>
+    <img src="a4_schematic1.jpg" height="300px" />
+    <img src="a4_schematic2.jpg" height="300px" />
+    </div>
+
+    <div>
+    <p>Circuit</p>
+    <img src="a4_circuit1.JPG" height="300px"/>
+    <img src="a4_circuit2.JPG" height="300px"/>
+    <p>The idea is that the LCD shows “Too close!” when an object is getting too close (less than 30 cm) to the ultrasonic sensor. The LCD shows “Great distance” when the closest object has a distance to the sensor that is greater than or equal to 30 cm.
+      For the circuit of the LCD, I chose to use a resistor and a potentiometer based on the documentation of Arduino LCD: https://docs.arduino.cc/learn/electronics/lcd-displays/. I used a resistor to restrict the current flowing through the circuit, and I chose to use a 220 ohm one because the documentation of LCD suggests using a 220 ohm resistor. According to this post (https://www.electronicsforu.com/technology-trends/learn-electronics/16x2-lcd-pinout-diagram), a potentiometer should be included to be able to adjust the “contrast between the text and the background on the LCD screen”.
+    </p>
+    </div>
+
+    <div>
+      <img src="a4_circuitope.GIF" height="300px"/>
+      <p>The ultrasonic sensor reads the distance from the sensor to the closest object detected by the sensor. 
+        The distance is printed to the Serial Monitor. 
+        If this distance is less than 30 cm, than the LCD screen displays “Too close!”. 
+        If the distance is greater than or equal to 30 cm, than the LCD screen displays “Great distance”.
+      </p>
+      </div>
+
+    <div>
+    <p>Code</p>
+    <pre>
+      <code class="language-arduino">
+        
+      </code>
+    </pre>
+    </div>
+
+
+    <div>
+      <p>Addtional Questions</p>
+      <p>Question 1:</p>
+      <p></p>
+      
+      <p>Question 2:</p>
+      <p></p>
+      
+      <p>Question 3:</p>
+      <p></p>
+      
+    </div>
+
+
+  </body>
+</html>
