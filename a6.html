@@ -69,8 +69,8 @@
             
             let array1 = str.trim().split(","); // store x and y values in array1 as str
 
-            let valx = map(Number(array1[0]), 0, 1023, 0, windowWidth); // turns the x value str to a Number and map it to the window width, and store it to valx
-            let valy = map(Number(array1[1]), 0, 1023, 0, windowHeight); // turns the y value str to a Number and map it to the window height, and store it to valy
+            let valx = map(Number(array1[0]), 0, 1023, 0, windowWidth); // turn the x value str to a Number and map it to the window width, and store it to valx
+            let valy = map(Number(array1[1]), 0, 1023, 0, windowHeight); // turn the y value str to a Number and map it to the window height, and store it to valy
 
             if (valx < windowWidth/2) { // if valx is less than half of the window width (on the left hand side of the screen)
               let c = color(255, 0, 0); // set c to red RGB code
