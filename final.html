@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Final Project: Don’t Open That Door</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Final Project: Don’t Open That Door</h1>
+
+    <div>
+      <br>
+      <p>Concept</p>
+      <br/>
+      <p>I’ve experienced living with roommates who are less aware of my personal boundary. 
+        For example, some of them would just randomly open my bedroom door without knocking or asking for permission. 
+        The others would silently stand outside of my door to eavesdrop on my conversation. 
+        The unpleasant experience living with these people motivated me to design and build a system that alerts me when someone’s approaching my bedroom. 
+        Once this system is connected to power, the LED strip lights up and functions as a light source and decorative component. 
+        If someone approaches my bedroom and is within 50 centimeters of distance from my door, the LED strip will blink and alert the person inside the room. 
+        If the person outside touches the door handle, then a buzzer will make a beeping sound indicating that someone’s trying to enter the room.
+      </p>
+    </div>
+
+
+    <div>
+    <p>Schematic</p>
+    <img src="final_schematic1.jpg" height="500px" />
+    <img src="final_schematic2.jpg" height="500px" />
+    </div>
+
+    <div>
+    <p>Circuit</p>
+    <img src="final_circuit1.JPG" height="500px"/>
+    <img src="final_circuit2.JPG" height="500px"/>
+    </div>
+
+
+    <div>
+    <p>Code</p>
+    <p>I found the library and example code for the ultrasonic sensor called “SE04.h” from the ELEGOO website: https://www.elegoo.com/blogs/arduino-projects/elegoo-uno-project-super-starter-kit-tutorial?_pos=12&_sid=6098200f4&_ss=r. 
+    </p>
+
+    <pre>
+      <code class="language-arduino">
+          #include <CapacitiveSensor.h> // include the capasitive sensor library
+          CapacitiveSensor cs_4_2 = CapacitiveSensor(4,2); // create a CapacitiveSensor instance. A 1 megohm resistor is between pin 2 and pin 4.
+          
+          #include "SR04.h" // include the ultrasonic sensor library, I found the library and example code for the ultrasonic sensor called “SE04.h” from the ELEGOO website: https://www.elegoo.com/blogs/arduino-projects/elegoo-uno-project-super-starter-kit-tutorial?_pos=12&_sid=6098200f4&_ss=r
+          
+          #define TRIG_PIN 8 // set pin 8 to trigger
+          #define ECHO_PIN 9 // set pin 9 to echo
+          SR04 sr04 = SR04(ECHO_PIN,TRIG_PIN); // create an sr04 object for ultrasonic sensor
+          int distance; // create int variable distance
+          
+          int buzzerPin = 6; // create int variable buzzerPin and set it to 6
+          int ledStripPin = 11; // create int variable ledStripPin and set it to 11
+          
+          void setup() { // set up for serial communication and initialize pins
+            cs_4_2.set_CS_AutocaL_Millis(0xFFFFFFFF); // turn off autocalibrate on channel 1
+            Serial.begin(9600); // initialize serial communication for debugging
+            pinMode(ledStripPin, OUTPUT); // initialize LED strip pin as output
+            pinMode(buzzerPin, OUTPUT); // initialize the buzzer pin as output
+          }
+          
+          void loop() { // LED strip blinks if the closest object detected by the ultrasonic sensor is 50 cm or less; buzzer makes beep sound if capacitive sensor is directly touched
+            
+            distance = sr04.Distance(); // measure distance from the ultrasonic sensor to the closest object that can be detected
+            Serial.print(distance); // print variable distance to serial monitor for degbugging
+            Serial.println("cm"); // print "cm" to serial monitor and go to next line
+            delay(10); // wait for 10 ms
+            
+            if (distance < 50) { // if the distance detected is less than 50 cm
+              digitalWrite(ledStripPin, HIGH); // turn on the LED strip
+              delay(35); // wait for 35 ms
+              digitalWrite(ledStripPin, LOW); // turn off the LED strip
+              delay(35); // wait for 35 ms
+            }
+          
+            long start = millis(); // create long variable start and set it to the number of milliseconds passed since the Arduino began running
+            long total1 =  cs_4_2.capacitiveSensor(30); // create long variable total1 and set it to the sensed capacitance
+            Serial.print(millis() - start); // check on performance in milliseconds
+            Serial.print("\t"); // tab character for debug window spacing
+            Serial.println(total1); // print sensor output
+            delay(50); // delay to limit data to serial port
+          
+            if (total1 > 2000) { // if the sensed capacitance is greater than 2000
+              tone(buzzerPin, 1500, 60); // buzzer makes beep sound
+            }
+          }
+      </code>
+    </pre>
+    </div>
+
+
+
+    <div>
+      <br>
+      <p>Technical Writeup</p>
+      <br/>
+
+      <br>
+      <p>For building the part where an LED strip blinks when someone’s within 50 cm of distance from the door, I used an ultrasonic sensor as the input device and an LED strip and the output device. 
+        The ultrasonic sensor has 4 pins, where the Vcc pin is connected to the 5V power, the Gnd pin is connected to ground, the Trig pin is connected to pin 8 and the Echo pin is connected to pin 9. 
+        For the LED strip, it is connected to circuit using the alligator clips. A transistor is connected to pin 11 of the Arduino board so that I can write code to control the LED strip.
+      </p>
+      <br/>
+
+      <img src="final_technical1.JPG" height="500px"/>
+      <img src="final_technical3.jpg" height="500px"/>
+
+      <br>
+      <p>Another important function of this product is that a buzzer makes beeping sound if someone touches the capacitive sensor (door handle). 
+        I first attempted to use the metal room handle itself to function as the capacitive sensing component, but the challenge I encountered was that the alligator clip was not able to open wide enough to grab my door handle. 
+        To address this issue, I wrapped some aluminum foil around the handle and had the alligator clip grab onto the foil instead of the handle. 
+        I taped the aluminum foil tightly with the handle so that the foil doesn’t move around when someone attempts to use the handle. 
+        A 1 megohm resistor is used between Arduino pin 2 and pin 4 because I would like the capacitive sensor to sense an absolute touch. 
+        After making sure that the capacitive sensor functions, I started to work with the buzzer, where I connected it to pin 6 and the ground. 
+        The buzzer is coded so that it makes beeping sound when a direct touch is sensed by the capacitive sensor.
+        I created a box using cardboard and put the circuit inside and only left the ultrasonic sensor, the capacitive sensor, and the LED strip outside of the box. 
+        Finally, I connected the LED strip to the power supply to make it work.
+        The box and the LED strip were taped on my door to make sure that they are fixed in place.        
+      </p>
+      <br/>
+
+      <img src="final_technical2.JPG" height="500px"/>
+      <img src="final_technical4.JPG" height="500px"/>
+
+      <br>
+      <p>For the Arduino code, I first included a capacitive sensor and an ultrasonic sensor library to work with the sensors. 
+        Then inside the void setup(), I initialized serial communication for debugging and initialized pin 11 (for LED strip) and pin 6 (for buzzer) as output. 
+        Inside the void loop(), I wrote code to first measure the distance from the ultrasonic sensor to the closest object that can be detected, and had the distance printed to Serial Monitor for debugging. 
+        If the distance detected is less than 50 cm, then the LED strip blinks in a pattern where it turns on for 35 ms and turns off for 35 ms. 
+        Then I wrote code to read the capacitance sensed by the capacitive sensor, and had it printed to the Serial Monitor for debugging. 
+        If the capacitance is greater than 2000, it means that a direct touch is sensed and the buzzer makes beeping sound.
+      </p>
+      <br/>
+
+    </div>
+
+
+    <div>
+      <p>Demo Video</p>
+      <video width="512" height="288" controls>
+        <source src="final_video.mp4" type="video/mp4">
+      </video>
+    </div>
+
+
+  </body>
+</html>
